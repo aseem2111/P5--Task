@@ -1,53 +1,53 @@
-import { Link, useNavigate } from 'react-router-dom'
-import { useState, useEffect } from 'react'
-import { onAuthStateChanged, signOut } from 'firebase/auth'
-import { auth } from '../firebase'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { useEffect } from 'react'
+import { getAuth, signOut } from 'firebase/auth'
 
 function Navbar() {
+  const location = useLocation()
   const navigate = useNavigate()
-  const [user, setUser] = useState(null)
+  const auth = getAuth()
+  const isHome = location.pathname === '/home'
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser)
-    })
-
-    return () => unsubscribe()
-  }, [])
+    if (isHome && location.hash) {
+      const section = document.getElementById(location.hash.substring(1))
+      section?.scrollIntoView({ behavior: 'smooth' })
+    }
+  }, [isHome, location.hash])
 
   async function handleLogout() {
     try {
       await signOut(auth)
       navigate('/login')
     } catch (error) {
-      console.error('Logout error:', error)
+      console.error('Logout failed:', error)
+    }
+  }
+
+  function goToSection(section) {
+    if (isHome) {
+      document.getElementById(section)?.scrollIntoView({ behavior: 'smooth' })
+    } else {
+      navigate(`/home#${section}`)
     }
   }
 
   return (
     <nav>
-      <h2>
-        <Link to="/">DEV@Deakin</Link>
-      </h2>
+      <Link to={isHome ? '/home' : '/signup'} className="navbar-brand">
+        DEV@Deakin
+      </Link>
 
-      <ul>
-        <li><a href="/#about">About</a></li>
-        <li><a href="/#work">Work</a></li>
-        <li><a href="/#contact">Contact</a></li>
-
-        {!user ? (
-          <>
-            <li><Link to="/login">Login</Link></li>
-            <li><Link to="/signup">Sign Up</Link></li>
-          </>
-        ) : (
-          <li>
-            <button type="button" onClick={handleLogout}>
-              Logout
-            </button>
-          </li>
-        )}
-      </ul>
+      {isHome && (
+        <ul>
+          <li><button onClick={() => goToSection('about')}>About</button></li>
+          <li><button onClick={() => goToSection('work')}>Work</button></li>
+          <li><button onClick={() => goToSection('contact')}>Contact</button></li>
+          <li><button onClick={() => navigate('/post')}>New Post</button></li>
+          <li><button onClick={handleLogout}>Logout</button></li>
+        
+        </ul>
+      )}
     </nav>
   )
 }

@@ -13,6 +13,7 @@ import Footer from './components/Footer'
 import FeaturedTutorials from './components/FeaturedTutorials'
 import Login from './pages/login'
 import Signup from './pages/signup'
+import Post from './pages/Post'
 
 function Home() {
   return (
@@ -38,7 +39,9 @@ function App() {
       <Route path="/signup" element={<Signup />} />
       <Route path="/login" element={<Login />} />
       <Route path="/home" element={<Home />} />
+      <Route path="/post" element={<Post />} />
       <Route path="*" element={<Navigate to="/signup" replace />} />
+      
     </Routes>
   )
 }
