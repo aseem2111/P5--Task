@@ -1,31 +1,40 @@
+
 import { useState } from 'react'
 
 function Newsletter() {
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    setMessage('')
+    setLoading(true)
 
     try {
-      const response = await fetch('http://localhost:3000/api/subscribe', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email })
-      })
+     const response = await fetch(
+  'http://localhost:5050/api/newsletter/subscribe',
+  {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ email })
+  }
+);
 
       const data = await response.json()
 
-      if (response.ok) {
-        setMessage(data.message)
-        setEmail('')
-      } else {
-        setMessage(data.error)
+      if (!response.ok) {
+        throw new Error(data.message || data.error || 'Subscription failed.')
       }
+
+      setMessage(data.message || 'Successfully subscribed!')
+      setEmail('')
     } catch (error) {
-      setMessage('Something went wrong. Please try again.')
+      setMessage(error.message || 'Something went wrong. Please try again.')
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -46,12 +55,15 @@ function Newsletter() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              disabled={loading}
             />
 
-            <button type="submit">Subscribe</button>
+            <button type="submit" disabled={loading}>
+              {loading ? 'Subscribing...' : 'Subscribe'}
+            </button>
           </div>
 
-          <p>{message}</p>
+          <p role="status" aria-live="polite">{message}</p>
         </form>
       </div>
     </section>
@@ -59,3 +71,4 @@ function Newsletter() {
 }
 
 export default Newsletter
+

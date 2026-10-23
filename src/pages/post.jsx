@@ -107,7 +107,7 @@ function Post() {
         />
 
         <button type="button" onClick={handlePost}>
-          Post
+         post
         </button>
       </div>
     </div>
