@@ -1,4 +1,3 @@
-
 import { Navigate, Routes, Route } from 'react-router-dom'
 import './App.css'
 import Navbar from './components/Navbar'
@@ -35,13 +34,12 @@ function Home() {
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/signup" replace />} />
+      <Route path="/" element={<Home />} />
+      <Route path="/home" element={<Home />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/login" element={<Login />} />
-      <Route path="/home" element={<Home />} />
       <Route path="/post" element={<Post />} />
-      <Route path="*" element={<Navigate to="/signup" replace />} />
-      
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   )
 }

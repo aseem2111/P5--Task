@@ -1,4 +1,4 @@
-
+import { useNavigate } from "react-router-dom";
 import { useState } from 'react'
 import './post.css'
 
@@ -9,6 +9,7 @@ function Post() {
   const [abstract, setAbstract] = useState('')
   const [articleText, setArticleText] = useState('')
   const [tags, setTags] = useState('')
+const navigate = useNavigate();
 
   function handlePost() {
     if (!title.trim() || !tags.trim()) {
@@ -35,11 +36,16 @@ function Post() {
 
     alert('Your post has been submitted successfully!')
   }
+ 
 
   return (
     <div className="post-container">
-      <div className="post-card">
-        <h2>New Post</h2>
+        <div className="post-card">
+  <button type="button" onClick={() => navigate("/")}>
+    ← Back to Home
+  </button>
+
+  <h2>New Post</h2>
 
         <div className="post-type">
           <label>

@@ -6,7 +6,7 @@ function Navbar() {
   const location = useLocation()
   const navigate = useNavigate()
   const auth = getAuth()
-  const isHome = location.pathname === '/home'
+  const isHome = location.pathname === '/' || location.pathname === '/home'
 
   useEffect(() => {
     if (isHome && location.hash) {
